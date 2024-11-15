@@ -1,0 +1,37 @@
+name: Build and Test .NET Project
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build-dotnet:
+    name: Build and Test .NET Projects
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies for AssetApi
+      run: dotnet restore AssetApi/AssetApi.csproj
+
+    - name: Build AssetApi
+      run: dotnet build AssetApi/AssetApi.csproj --no-restore
+
+    - name: Restore dependencies for AuthApi
+      run: dotnet restore AuthApi/AuthApi.csproj
+
+    - name: Build AuthApi
+      run: dotnet build AuthApi/AuthApi.csproj --no-restore
+
+    - name: Restore dependencies for GatewayApi
+      run: dotnet restore GatewayApi/GatewayApi.csproj
+
+    - name: Build GatewayApi
+      run: dotnet build GatewayApi/GatewayApi.csproj --no-restore
